@@ -39,7 +39,7 @@ public class EvictionRepository extends Repository
 	{
 		String playerName = player.getName(); // Get the name of the player.
 		database.execute("INSERT IGNORE INTO `survival_evict` (player, start_date) VALUES(?, NOW())", playerName);
-		int daysLeft = database.queryInteger("SELECT DATEDIFF(NOW(), start_date) FROM survival_evict WHERE player = ?", playerName) - 7;
+		int daysLeft = 7 - database.queryInteger("SELECT DATEDIFF(NOW(), start_date) FROM survival_evict WHERE player = ?", playerName);
 
 		return daysLeft < 0 ? 0 : daysLeft;
 	}
