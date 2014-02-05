@@ -1,6 +1,7 @@
 package no.runsafe.survivalevictor;
 
 import no.runsafe.framework.api.IConfiguration;
+import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.event.player.IPlayerTeleportEvent;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
@@ -35,7 +36,17 @@ public class PlayerMonitor implements IPlayerTeleportEvent, IConfigurationChange
 				if (daysLeft == 0)
 				{
 					event.cancel();
-					player.sendColouredMessage("&cThe world you are trying to get to is now closed!");
+
+					IWorld sourceWorld = event.getFrom().getWorld();
+					if (sourceWorld != null && world.isWorld(sourceWorld) && spawnWorld != null)
+					{
+						player.teleport(spawnWorld.getSpawnLocation());
+						player.sendColouredMessage("&cThe logged in while inside a closed world, you've been teleported away!");
+					}
+					else
+					{
+						player.sendColouredMessage("&cThe world you are trying to get to is now closed!");
+					}
 				}
 				else
 				{
@@ -49,8 +60,10 @@ public class PlayerMonitor implements IPlayerTeleportEvent, IConfigurationChange
 	public void OnConfigurationChanged(IConfiguration configuration)
 	{
 		worldName = configuration.getConfigValueAsString("world");
+		spawnWorld = configuration.getConfigValueAsWorld("spawnWorld");
 	}
 
 	private String worldName;
+	private IWorld spawnWorld;
 	private final EvictionRepository repository;
 }
