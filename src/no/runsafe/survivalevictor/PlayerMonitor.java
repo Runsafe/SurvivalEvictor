@@ -35,6 +35,9 @@ public class PlayerMonitor implements IPlayerTeleportEvent, IConfigurationChange
 			if (world.getName().equals(worldName))
 			{
 				IPlayer player = event.getPlayer(); // Grab the player.
+				if (player.hasPermission("runsafe.evict.immune"))
+					return;
+
 				int daysLeft = repository.getDaysRemaining(player); // How many days the player has left.
 
 				if (daysLeft == 0)
