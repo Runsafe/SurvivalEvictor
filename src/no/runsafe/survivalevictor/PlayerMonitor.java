@@ -39,7 +39,7 @@ public class PlayerMonitor implements IPlayerTeleportEvent, IConfigurationChange
 				}
 				else
 				{
-					player.sendColouredMessage("&cThis world is closed, you will only be able to access it for %s more days.", daysLeft);
+					player.sendColouredMessage("&4ATTENTION! &cThis world is closed, you will only be able to access it for %s more days.", daysLeft);
 				}
 			}
 		}
