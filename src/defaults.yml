@@ -1,2 +1,6 @@
 world: world
-spawnWorld: spawn
+spawnLocation:
+  world: spawn
+  x: -9955
+  y: 127
+  z: -9969

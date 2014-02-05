@@ -38,9 +38,9 @@ public class PlayerMonitor implements IPlayerTeleportEvent, IConfigurationChange
 					event.cancel();
 
 					IWorld sourceWorld = event.getFrom().getWorld();
-					if (sourceWorld != null && world.isWorld(sourceWorld) && spawnWorld != null)
+					if (sourceWorld != null && world.isWorld(sourceWorld) && spawnLocation != null)
 					{
-						player.teleport(spawnWorld.getSpawnLocation());
+						player.teleport(spawnLocation);
 						player.sendColouredMessage("&cThe logged in while inside a closed world, you've been teleported away!");
 					}
 					else
@@ -60,10 +60,10 @@ public class PlayerMonitor implements IPlayerTeleportEvent, IConfigurationChange
 	public void OnConfigurationChanged(IConfiguration configuration)
 	{
 		worldName = configuration.getConfigValueAsString("world");
-		spawnWorld = configuration.getConfigValueAsWorld("spawnWorld");
+		spawnLocation = configuration.getConfigValueAsLocation("spawnLocation");
 	}
 
 	private String worldName;
-	private IWorld spawnWorld;
+	private ILocation spawnLocation;
 	private final EvictionRepository repository;
 }
