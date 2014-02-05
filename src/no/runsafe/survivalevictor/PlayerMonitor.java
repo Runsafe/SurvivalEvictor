@@ -1,12 +1,12 @@
 package no.runsafe.survivalevictor;
 
-import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IWorld;
-import no.runsafe.framework.api.event.player.IPlayerTeleport;
+import no.runsafe.framework.api.event.player.IPlayerTeleportEvent;
 import no.runsafe.framework.api.log.IConsole;
 import no.runsafe.framework.api.player.IPlayer;
+import no.runsafe.framework.minecraft.event.player.RunsafePlayerTeleportEvent;
 
-public class PlayerMonitor implements IPlayerTeleport
+public class PlayerMonitor implements IPlayerTeleportEvent
 {
 	public PlayerMonitor(IConsole console)
 	{
@@ -14,28 +14,27 @@ public class PlayerMonitor implements IPlayerTeleport
 	}
 
 	@Override
-	public boolean OnPlayerTeleport(IPlayer player, ILocation from, ILocation to)
+	public void OnPlayerTeleport(RunsafePlayerTeleportEvent event)
 	{
-		IWorld world = to.getWorld();
+		IPlayer player = event.getPlayer();
+		IWorld world = event.getTo().getWorld();
 
 		if (world == null)
 		{
 			console.logInformation("Player %s is going to a NULL world!", player.getName());
-			return true;
+			return;
 		}
 
 		console.logInformation("Player %s is going to world: %s", player.getName(), world.getName());
 
-		IWorld sourceWorld = from.getWorld();
+		IWorld sourceWorld = event.getFrom().getWorld();
 		if (sourceWorld == null)
 		{
 			console.logInformation("Player %s is coming from a NULL world", player.getName());
-			return true;
+			return;
 		}
 
 		console.logInformation("Player %s is coming from world: %s", player.getName(), world.getName());
-
-		return true;
 	}
 
 	private final IConsole console;
