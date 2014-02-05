@@ -1,41 +1,56 @@
 package no.runsafe.survivalevictor;
 
+import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.IWorld;
 import no.runsafe.framework.api.event.player.IPlayerTeleportEvent;
-import no.runsafe.framework.api.log.IConsole;
+import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.event.player.RunsafePlayerTeleportEvent;
 
-public class PlayerMonitor implements IPlayerTeleportEvent
+public class PlayerMonitor implements IPlayerTeleportEvent, IConfigurationChanged
 {
-	public PlayerMonitor(IConsole console)
+	public PlayerMonitor(EvictionRepository repository)
 	{
-		this.console = console;
+		this.repository = repository;
 	}
 
 	@Override
 	public void OnPlayerTeleport(RunsafePlayerTeleportEvent event)
 	{
-		IPlayer player = event.getPlayer();
-		IWorld world = event.getTo().getWorld();
-
-		if (world == null)
-		{
-			console.logInformation("Player %s is going to a NULL world!", player.getName());
+		// Check if we have a world name defined, otherwise just stop processing.
+		if (worldName == null)
 			return;
-		}
 
-		console.logInformation("Player %s is going to world: %s", player.getName(), world.getName());
+		IWorld world = event.getTo().getWorld(); // Grab the target world.
 
-		IWorld sourceWorld = event.getFrom().getWorld();
-		if (sourceWorld == null)
+		// Make sure the world we are going to is not NULL before starting.
+		if (world != null)
 		{
-			console.logInformation("Player %s is coming from a NULL world", player.getName());
-			return;
-		}
+			// Check the player is teleporting to the eviction world.
+			if (world.getName().equals(worldName))
+			{
+				IPlayer player = event.getPlayer(); // Grab the player.
+				int daysLeft = repository.getDaysRemaining(player); // How many days the player has left.
 
-		console.logInformation("Player %s is coming from world: %s", player.getName(), sourceWorld.getName());
+				if (daysLeft == 0)
+				{
+					event.cancel();
+					player.sendColouredMessage("&cThe world you are trying to get to is now closed!");
+				}
+				else
+				{
+					player.sendColouredMessage("&cThis world is closed, you will only be able to access it for %s more days.", daysLeft);
+				}
+			}
+		}
 	}
 
-	private final IConsole console;
+	@Override
+	public void OnConfigurationChanged(IConfiguration configuration)
+	{
+		worldName = configuration.getConfigValueAsString("world");
+	}
+
+	private String worldName;
+	private final EvictionRepository repository;
 }

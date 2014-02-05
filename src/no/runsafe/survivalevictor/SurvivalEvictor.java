@@ -1,10 +1,10 @@
 package no.runsafe.survivalevictor;
 
-import no.runsafe.framework.RunsafePlugin;
+import no.runsafe.framework.RunsafeConfigurablePlugin;
 import no.runsafe.framework.features.Database;
 import no.runsafe.framework.features.Events;
 
-public class SurvivalEvictor extends RunsafePlugin
+public class SurvivalEvictor extends RunsafeConfigurablePlugin
 {
 	@Override
 	protected void pluginSetup()
@@ -18,6 +18,7 @@ public class SurvivalEvictor extends RunsafePlugin
 		//addComponent(UniverseRegistration.class);
 
 		// Plugin components
+		addComponent(EvictionRepository.class);
 		addComponent(PlayerMonitor.class);
 	}
 }
