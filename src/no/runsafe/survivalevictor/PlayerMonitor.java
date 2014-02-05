@@ -3,12 +3,16 @@ package no.runsafe.survivalevictor;
 import no.runsafe.framework.api.IConfiguration;
 import no.runsafe.framework.api.ILocation;
 import no.runsafe.framework.api.IWorld;
+import no.runsafe.framework.api.event.player.IPlayerMove;
 import no.runsafe.framework.api.event.player.IPlayerTeleportEvent;
 import no.runsafe.framework.api.event.plugin.IConfigurationChanged;
 import no.runsafe.framework.api.player.IPlayer;
 import no.runsafe.framework.minecraft.event.player.RunsafePlayerTeleportEvent;
 
-public class PlayerMonitor implements IPlayerTeleportEvent, IConfigurationChanged
+import java.util.ArrayList;
+import java.util.List;
+
+public class PlayerMonitor implements IPlayerTeleportEvent, IConfigurationChanged, IPlayerMove
 {
 	public PlayerMonitor(EvictionRepository repository)
 	{
@@ -40,9 +44,7 @@ public class PlayerMonitor implements IPlayerTeleportEvent, IConfigurationChange
 					IWorld sourceWorld = event.getFrom().getWorld();
 					if (sourceWorld != null && world.isWorld(sourceWorld) && spawnLocation != null)
 					{
-						player.teleport(spawnLocation);
-						player.sendColouredMessage(spawnLocation.toString());
-						player.sendColouredMessage("&cThe logged in while inside a closed world, you've been teleported away!");
+						illegalPlayers.add(player.getName());
 					}
 					else
 					{
@@ -58,6 +60,22 @@ public class PlayerMonitor implements IPlayerTeleportEvent, IConfigurationChange
 	}
 
 	@Override
+	public boolean OnPlayerMove(IPlayer player, ILocation from, ILocation to)
+	{
+		if (spawnLocation == null)
+			return true;
+
+		String playerName = player.getName();
+		if (illegalPlayers.contains(playerName))
+		{
+			player.teleport(spawnLocation);
+			player.sendColouredMessage("&cThe world you were in is closed, you have been teleported out!");
+			illegalPlayers.remove(playerName);
+		}
+		return true;
+	}
+
+	@Override
 	public void OnConfigurationChanged(IConfiguration configuration)
 	{
 		worldName = configuration.getConfigValueAsString("world");
@@ -67,4 +85,5 @@ public class PlayerMonitor implements IPlayerTeleportEvent, IConfigurationChange
 	private String worldName;
 	private ILocation spawnLocation;
 	private final EvictionRepository repository;
+	private final List<String> illegalPlayers = new ArrayList<String>(0);
 }
