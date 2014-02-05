@@ -34,7 +34,7 @@ public class PlayerMonitor implements IPlayerTeleportEvent
 			return;
 		}
 
-		console.logInformation("Player %s is coming from world: %s", player.getName(), world.getName());
+		console.logInformation("Player %s is coming from world: %s", player.getName(), sourceWorld.getName());
 	}
 
 	private final IConsole console;
