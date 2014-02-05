@@ -48,7 +48,7 @@ public class PlayerMonitor implements IPlayerTeleportEvent, IConfigurationChange
 					}
 					else
 					{
-						player.sendColouredMessage("&cThe world you are trying to get to is now closed!");
+						player.sendColouredMessage("&4The world you are trying to get to is now closed!");
 					}
 				}
 				else
@@ -69,7 +69,7 @@ public class PlayerMonitor implements IPlayerTeleportEvent, IConfigurationChange
 		if (illegalPlayers.contains(playerName))
 		{
 			player.teleport(spawnLocation);
-			player.sendColouredMessage("&cThe world you were in is closed, you have been teleported out!");
+			player.sendColouredMessage("&4The world you were in is closed, you have been teleported out!");
 			illegalPlayers.remove(playerName);
 		}
 		return true;
