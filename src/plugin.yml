@@ -1,0 +1,10 @@
+name: SurvivalEvictor
+main: no.runsafe.survivalevictor.SurvivalEvictor
+version: 1.0.@BUILD@
+authors: []
+depend: []
+description:
+commands:
+  something:
+    description:
+    aliases: []
