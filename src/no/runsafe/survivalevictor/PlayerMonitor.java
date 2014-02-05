@@ -41,6 +41,7 @@ public class PlayerMonitor implements IPlayerTeleportEvent, IConfigurationChange
 					if (sourceWorld != null && world.isWorld(sourceWorld) && spawnLocation != null)
 					{
 						player.teleport(spawnLocation);
+						player.sendColouredMessage(spawnLocation.toString());
 						player.sendColouredMessage("&cThe logged in while inside a closed world, you've been teleported away!");
 					}
 					else
