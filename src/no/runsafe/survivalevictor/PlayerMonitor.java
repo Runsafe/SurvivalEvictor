@@ -23,7 +23,7 @@ public class PlayerMonitor implements IPlayerTeleportEvent, IConfigurationChange
 	public void OnPlayerTeleport(RunsafePlayerTeleportEvent event)
 	{
 		// Check if we have a world name defined, otherwise just stop processing.
-		if (worldName == null)
+		if (worlds != null && !worlds.isEmpty())
 			return;
 
 		IWorld world = event.getTo().getWorld(); // Grab the target world.
@@ -32,7 +32,7 @@ public class PlayerMonitor implements IPlayerTeleportEvent, IConfigurationChange
 		if (world != null)
 		{
 			// Check the player is teleporting to the eviction world.
-			if (world.getName().equals(worldName))
+			if (worlds.contains(world.getName()))
 			{
 				IPlayer player = event.getPlayer(); // Grab the player.
 				if (player.hasPermission("runsafe.evict.immune"))
@@ -81,11 +81,11 @@ public class PlayerMonitor implements IPlayerTeleportEvent, IConfigurationChange
 	@Override
 	public void OnConfigurationChanged(IConfiguration configuration)
 	{
-		worldName = configuration.getConfigValueAsString("world");
+		worlds = configuration.getConfigValueAsList("worlds");
 		spawnLocation = configuration.getConfigValueAsLocation("spawnLocation");
 	}
 
-	private String worldName;
+	private List<String> worlds;
 	private ILocation spawnLocation;
 	private final EvictionRepository repository;
 	private final List<String> illegalPlayers = new ArrayList<String>(0);
