@@ -1,6 +1,5 @@
 worlds:
-  - world
-  - world_nether
+  - randomnonexistingworld
 spawnLocation:
   world: spawn
   x: -9955
