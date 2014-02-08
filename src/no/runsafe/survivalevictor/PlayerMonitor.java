@@ -23,7 +23,7 @@ public class PlayerMonitor implements IPlayerTeleportEvent, IConfigurationChange
 	public void OnPlayerTeleport(RunsafePlayerTeleportEvent event)
 	{
 		// Check if we have a world name defined, otherwise just stop processing.
-		if (worlds != null && !worlds.isEmpty())
+		if (worlds == null || worlds.isEmpty())
 			return;
 
 		IWorld world = event.getTo().getWorld(); // Grab the target world.
