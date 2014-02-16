@@ -41,23 +41,9 @@ public class PlayerMonitor implements IPlayerTeleportEvent, IConfigurationChange
 				int daysLeft = repository.getDaysRemaining(player); // How many days the player has left.
 
 				if (daysLeft == 0)
-				{
-					event.cancel();
-
-					IWorld sourceWorld = event.getFrom().getWorld();
-					if (sourceWorld != null && world.isWorld(sourceWorld) && spawnLocation != null)
-					{
-						illegalPlayers.add(player.getName());
-					}
-					else
-					{
-						player.sendColouredMessage("&4The world you are trying to get to is now closed!");
-					}
-				}
+					illegalPlayers.add(player.getName());
 				else
-				{
 					player.sendColouredMessage("&4ATTENTION! &cThis world is closed, you will only be able to access it for %s more days.", daysLeft);
-				}
 			}
 		}
 	}
